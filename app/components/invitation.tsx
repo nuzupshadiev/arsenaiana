@@ -61,20 +61,24 @@ export function Invitation() {
 
   async function handleRsvpSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!rsvp || !name.trim()) return;
+    if (!rsvp || !name.trim() || submitting) return;
 
-    await fetch("/api/rsvp", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        name,
-        rsvp,
-      }),
-    });
-
-    setSubmitted(true);
+    setSubmitting(true);
+    try {
+      await fetch("/api/rsvp", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name,
+          rsvp,
+        }),
+      });
+      setSubmitted(true);
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   return (
