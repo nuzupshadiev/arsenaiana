@@ -2,7 +2,7 @@ import { google } from "googleapis";
 
 export async function POST(req: Request) {
   const body = await req.json();
-  const { name, rsvp } = body;
+  const { name, rsvp, guests } = body;
 
   const auth = new google.auth.JWT({
     email: process.env.GOOGLE_CLIENT_EMAIL,
@@ -16,10 +16,17 @@ export async function POST(req: Request) {
 
   await sheets.spreadsheets.values.append({
     spreadsheetId,
-    range: "Sheet1!A:C",
+    range: "Sheet1!A:D",
     valueInputOption: "USER_ENTERED",
     requestBody: {
-      values: [[new Date().toISOString(), name, rsvp]],
+      values: [
+        [
+          new Date().toISOString(),
+          name,
+          rsvp,
+          rsvp === "бирге" && guests ? guests : "",
+        ],
+      ],
     },
   });
 

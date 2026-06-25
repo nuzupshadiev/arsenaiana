@@ -73,6 +73,7 @@ export function Invitation() {
         body: JSON.stringify({
           name,
           rsvp,
+          ...(rsvp === "бирге" ? { guests } : {}),
         }),
       });
       setSubmitted(true);
